@@ -12,7 +12,7 @@ class DemoApplicationTests {
 
     @Test
     void contextLoads() throws ParseException {
-
+        System.out.println("Hello");
     }
 
 }
