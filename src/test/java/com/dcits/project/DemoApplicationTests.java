@@ -11,7 +11,7 @@ import java.text.ParseException;
 class DemoApplicationTests {
 
     @Test
-    void contextLoads() throws ParseException {
+    void contextLoads() {
         System.out.println("hello world");
     }
 
