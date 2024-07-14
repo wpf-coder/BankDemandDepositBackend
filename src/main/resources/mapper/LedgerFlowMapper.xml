@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dcits.project.mapper.LedgerFlowMapper">
+  <resultMap id="BaseResultMap" type="com.dcits.project.pojo.LedgerFlow">
+    <id column="ledger_flow_serial" jdbcType="INTEGER" property="serial" />
+    <result column="ledger_flow_subject_serial" jdbcType="VARCHAR" property="subjectSerial" />
+    <result column="ledger_flow_load_relationship" jdbcType="TINYINT" property="loadRelationship" />
+    <result column="ledger_flow_transaction_serial" jdbcType="VARCHAR" property="transactionSerial" />
+    <result column="ledger_flow_amount" jdbcType="DECIMAL" property="amount" />
+    <result column="ledger_flow_branch_id" jdbcType="CHAR" property="branchId" />
+    <result column="ledger_flow_date" jdbcType="DATE" property="date" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from ledger_flow
+    where ledger_flow_serial = #{serial,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.dcits.project.pojo.LedgerFlow">
+    insert into ledger_flow (ledger_flow_serial, ledger_flow_subject_serial, 
+      ledger_flow_load_relationship, ledger_flow_transaction_serial, 
+      ledger_flow_amount, ledger_flow_branch_id, ledger_flow_date
+      )
+    values (#{serial,jdbcType=INTEGER}, #{subjectSerial,jdbcType=VARCHAR}, 
+      #{loadRelationship,jdbcType=TINYINT}, #{transactionSerial,jdbcType=VARCHAR}, 
+      #{amount,jdbcType=DECIMAL}, #{branchId,jdbcType=CHAR}, #{date,jdbcType=DATE}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.dcits.project.pojo.LedgerFlow">
+    update ledger_flow
+    set ledger_flow_subject_serial = #{subjectSerial,jdbcType=VARCHAR},
+      ledger_flow_load_relationship = #{loadRelationship,jdbcType=TINYINT},
+      ledger_flow_transaction_serial = #{transactionSerial,jdbcType=VARCHAR},
+      ledger_flow_amount = #{amount,jdbcType=DECIMAL},
+      ledger_flow_branch_id = #{branchId,jdbcType=CHAR},
+      ledger_flow_date = #{date,jdbcType=DATE}
+    where ledger_flow_serial = #{serial,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select ledger_flow_serial, ledger_flow_subject_serial, ledger_flow_load_relationship, 
+    ledger_flow_transaction_serial, ledger_flow_amount, ledger_flow_branch_id, ledger_flow_date
+    from ledger_flow
+    where ledger_flow_serial = #{serial,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select ledger_flow_serial, ledger_flow_subject_serial, ledger_flow_load_relationship, 
+    ledger_flow_transaction_serial, ledger_flow_amount, ledger_flow_branch_id, ledger_flow_date
+    from ledger_flow
+  </select>
+</mapper>

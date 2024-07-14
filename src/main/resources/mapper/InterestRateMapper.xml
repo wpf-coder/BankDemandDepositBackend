@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dcits.project.mapper.InterestRateMapper">
+  <resultMap id="BaseResultMap" type="com.dcits.project.pojo.InterestRate">
+    <id column="interest_rate_serial" jdbcType="INTEGER" property="serial" />
+    <result column="interest_rate_code" jdbcType="VARCHAR" property="code" />
+    <result column="interest_rate_effective_time" jdbcType="DATE" property="effectiveTime" />
+    <result column="interest_rate_expiration_time" jdbcType="DATE" property="expirationTime" />
+    <result column="interest_rate_type" jdbcType="VARCHAR" property="type" />
+    <result column="interest_rate_base_time" jdbcType="VARCHAR" property="baseTime" />
+    <result column="interest_rate_value" jdbcType="DECIMAL" property="value" />
+    <result column="interest_rate_update_time" jdbcType="DATE" property="updateTime" />
+    <result column="interest_rate_update_operator" jdbcType="VARCHAR" property="updateOperator" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from interest_rate
+    where interest_rate_serial = #{serial,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.dcits.project.pojo.InterestRate">
+    insert into interest_rate (interest_rate_serial, interest_rate_code, 
+      interest_rate_effective_time, interest_rate_expiration_time, 
+      interest_rate_type, interest_rate_base_time, 
+      interest_rate_value, interest_rate_update_time, 
+      interest_rate_update_operator)
+    values (#{serial,jdbcType=INTEGER}, #{code,jdbcType=VARCHAR}, 
+      #{effectiveTime,jdbcType=DATE}, #{expirationTime,jdbcType=DATE}, 
+      #{type,jdbcType=VARCHAR}, #{baseTime,jdbcType=VARCHAR}, 
+      #{value,jdbcType=DECIMAL}, #{updateTime,jdbcType=DATE}, 
+      #{updateOperator,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.dcits.project.pojo.InterestRate">
+    update interest_rate
+    set interest_rate_code = #{code,jdbcType=VARCHAR},
+      interest_rate_effective_time = #{effectiveTime,jdbcType=DATE},
+      interest_rate_expiration_time = #{expirationTime,jdbcType=DATE},
+      interest_rate_type = #{type,jdbcType=VARCHAR},
+      interest_rate_base_time = #{baseTime,jdbcType=VARCHAR},
+      interest_rate_value = #{value,jdbcType=DECIMAL},
+      interest_rate_update_time = #{updateTime,jdbcType=DATE},
+      interest_rate_update_operator = #{updateOperator,jdbcType=VARCHAR}
+    where interest_rate_serial = #{serial,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select interest_rate_serial, interest_rate_code, interest_rate_effective_time, interest_rate_expiration_time, 
+    interest_rate_type, interest_rate_base_time, interest_rate_value, interest_rate_update_time, 
+    interest_rate_update_operator
+    from interest_rate
+    where interest_rate_serial = #{serial,jdbcType=INTEGER}
+  </select>
+  <select id="selectByCodeAndTime" resultMap="BaseResultMap">
+    select interest_rate_serial, interest_rate_code, interest_rate_effective_time, interest_rate_expiration_time, 
+    interest_rate_type, interest_rate_base_time, interest_rate_value, interest_rate_update_time, 
+    interest_rate_update_operator
+    from interest_rate
+    where interest_rate_code = #{code}
+            and #{time} <![CDATA[<]]> interest_rate_expiration_time
+            and #{time} <![CDATA[>=]]> interest_rate_effective_time;
+  </select>
+</mapper>

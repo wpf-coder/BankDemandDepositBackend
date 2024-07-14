@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dcits.project.mapper.SystemInformationMapper">
+  <resultMap id="BaseResultMap" type="com.dcits.project.pojo.SystemInformation">
+    <id column="system_serial" jdbcType="VARCHAR" property="systemSerial" />
+    <result column="system_time" jdbcType="DATE" property="systemTime" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from system_information
+    where system_serial = #{systemSerial,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.dcits.project.pojo.SystemInformation">
+    insert into system_information (system_serial, system_time)
+    values (#{systemSerial,jdbcType=VARCHAR}, #{systemTime,jdbcType=DATE})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.dcits.project.pojo.SystemInformation">
+    update system_information
+    set system_time = #{systemTime,jdbcType=DATE}
+    where system_serial = #{systemSerial,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select system_serial, system_time
+    from system_information
+    where system_serial = #{systemSerial,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select system_serial, system_time
+    from system_information
+  </select>
+
+</mapper>

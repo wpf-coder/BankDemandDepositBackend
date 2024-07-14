@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dcits.project.mapper.DemandInterestMapper">
+  <resultMap id="BaseResultMap" type="com.dcits.project.pojo.DemandInterest">
+    <id column="demand_interest_card_id" jdbcType="CHAR" property="cardId" />
+    <result column="demand_interest_cumulative_interest" jdbcType="DECIMAL" property="cumulativeInterest" />
+    <result column="demand_interest_last_count_time" jdbcType="DATE" property="lastCountTime" />
+    <result column="demand_interest_last_settle_time" jdbcType="DATE" property="lastSettleTime" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from demand_interest
+    where demand_interest_card_id = #{cardId,jdbcType=CHAR}
+  </delete>
+  <insert id="insert" parameterType="com.dcits.project.pojo.DemandInterest">
+    insert into demand_interest (demand_interest_card_id, demand_interest_cumulative_interest, 
+      demand_interest_last_count_time, demand_interest_last_settle_time
+      )
+    values (#{cardId,jdbcType=CHAR}, #{cumulativeInterest,jdbcType=DECIMAL}, 
+      #{lastCountTime,jdbcType=DATE}, #{lastSettleTime,jdbcType=DATE}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.dcits.project.pojo.DemandInterest">
+    update demand_interest
+    set demand_interest_cumulative_interest = #{cumulativeInterest,jdbcType=DECIMAL},
+      demand_interest_last_count_time = #{lastCountTime,jdbcType=DATE},
+      demand_interest_last_settle_time = #{lastSettleTime,jdbcType=DATE}
+    where demand_interest_card_id = #{cardId,jdbcType=CHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select demand_interest_card_id, demand_interest_cumulative_interest, demand_interest_last_count_time, 
+    demand_interest_last_settle_time
+    from demand_interest
+    where demand_interest_card_id = #{cardId,jdbcType=CHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select demand_interest_card_id, demand_interest_cumulative_interest, demand_interest_last_count_time, 
+    demand_interest_last_settle_time
+    from demand_interest
+  </select>
+</mapper>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dcits.project.mapper.EbankUserMapper">
+  
+  <resultMap id="BaseResultMap" type="com.dcits.project.pojo.EbankUser">
+    <id column="ebank_user_id" jdbcType="VARCHAR" property="id" />
+    <result column="ebank_user_password" jdbcType="VARCHAR" property="password" />
+    <result column="ebank_user_state" jdbcType="TINYINT" property="state" />
+  </resultMap>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from ebank_user
+    where ebank_user_id = #{id,jdbcType=VARCHAR}
+  </delete>
+
+  <insert id="insert" parameterType="com.dcits.project.pojo.EbankUser">
+    insert into ebank_user (ebank_user_id, ebank_user_password, ebank_user_state)
+    values (#{id,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{state,jdbcType=TINYINT});
+  </insert>
+
+  <update id="updateByPrimaryKey" parameterType="com.dcits.project.pojo.EbankUser">
+    update ebank_user
+    <set>
+      <if test='password != null and password != ""'>
+        ebank_user_password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null">
+        ebank_user_state = #{state,jdbcType=TINYINT}
+      </if>
+    </set>
+    where ebank_user_id = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select ebank_user_id, ebank_user_password, ebank_user_state
+    from ebank_user
+    where ebank_user_id = #{id,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectAll" resultMap="BaseResultMap">
+    select ebank_user_id, ebank_user_password, ebank_user_state
+    from ebank_user
+  </select>
+</mapper>

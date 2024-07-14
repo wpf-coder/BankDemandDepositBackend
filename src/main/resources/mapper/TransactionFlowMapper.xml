@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dcits.project.mapper.TransactionFlowMapper">
+  <resultMap id="BaseResultMap" type="com.dcits.project.pojo.TransactionFlow">
+      <id column="transaction_flow_serial" jdbcType="INTEGER" property="serial" />
+      <result column="transaction_flow_time" jdbcType="TIMESTAMP" property="time" />
+      <result column="transaction_flow_branch_id" jdbcType="CHAR" property="branchId" />
+      <result column="transaction_serial" property="transactionSerial"/>
+      <result column="transaction_flow_amount" jdbcType="DECIMAL" property="amount" />
+      <result column="transaction_flow_subject_card_number" jdbcType="TINYINT" property="subjectCardNumber" />
+      <result column="transaction_flow_type" jdbcType="TINYINT" property="type" />
+      <result column="transaction_flow_subject_card_balance" property="subjectCardBalance"/>
+      <result column="transaction_flow_counterparty_bank_card_number" jdbcType="CHAR" property="counterpartyCardNumber" />
+      <result column="transaction_flow_account_date" javaType="DATE" property="accountDate"/>
+  </resultMap>
+
+
+
+    <select id="queryTransactionFlow"  resultMap="BaseResultMap">
+        select
+        transaction_flow_serial,transaction_serial, transaction_flow_time, transaction_flow_branch_id,
+        transaction_flow_type, transaction_flow_amount, transaction_flow_subject_card_balance,
+        transaction_flow_subject_card_number, transaction_flow_counterparty_bank_card_number,
+        transaction_flow_account_time
+        from transaction_flow
+        where
+        <if test="type != null" >
+            transaction_flow_type <![CDATA[&]]> #{type} = transaction_flow_type
+            and
+        </if>
+        <if test="endTime != null" >
+            transaction_flow_time &lt;= #{endTime}
+            and
+        </if>
+        <if test="startTime != null">
+            transaction_flow_time &gt;= #{startTime}
+            and
+        </if>
+        transaction_flow_subject_card_number = #{id}
+    </select>
+
+    <!-- *****************以下是自动生成 *********************************** -->
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from transaction_flow
+    where transaction_flow_serial = #{serial,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="insert" parameterType="com.dcits.project.pojo.TransactionFlow">
+    insert into transaction_flow
+    (transaction_serial, transaction_flow_time, transaction_flow_branch_id,
+    transaction_flow_type, transaction_flow_amount, transaction_flow_subject_card_balance,
+    transaction_flow_subject_card_number, transaction_flow_counterparty_bank_card_number,
+    transaction_flow_account_time)
+
+    values (#{transactionSerial}, #{time,jdbcType=TIMESTAMP},  #{branchId,jdbcType=CHAR},
+      #{type,jdbcType=TINYINT}, #{amount,jdbcType=DECIMAL}, #{subjectCardBalance},
+       #{subjectCardNumber,jdbcType=TINYINT},  #{counterpartyCardNumber,jdbcType=CHAR},
+       #{accountDate,jdbcType=DATE}
+      )
+  </insert>
+
+  
+
+</mapper>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dcits.project.mapper.LedgerBalanceMapper">
+  <resultMap id="BaseResultMap" type="com.dcits.project.pojo.LedgerBalance">
+    <id column="ledger_balance_subject_serial" jdbcType="VARCHAR" property="subjectSerial" />
+    <id column="ledger_balance_branch" jdbcType="CHAR" property="branch" />
+
+    <result column="ledger_balance_balance" jdbcType="DECIMAL" property="balance" />
+    <result column="ledger_balance_account" jdbcType="VARCHAR" property="account" />
+
+    <result column="ledger_balance_state" jdbcType="TINYINT" property="state" />
+    <result column="ledger_balance_account_description" jdbcType="VARCHAR" property="accountDescription" />
+  </resultMap>
+
+  <resultMap id="linkLedgeFlowMap" type="com.dcits.project.pojo.LedgerBalance" extends="BaseResultMap">
+    <collection property="flows" resultMap="com.dcits.project.mapper.LedgerFlowMapper.BaseResultMap"/>
+  </resultMap>
+
+  <select id="getLedgerAndBranchCorrespondingLedgerFLow" resultMap="linkLedgeFlowMap">
+    select *
+    from (
+        select base.*,ledger_balance_account, ledger_balance_balance, ledger_balance_state, ledger_balance_account_description
+        from
+            (SELECT branch.branch_id as ledger_balance_branch,
+		    subject.subject_serial as ledger_balance_subject_serial
+		    from branch,subject
+		    ) as base left join ledger_balance
+				on base.ledger_balance_subject_serial = ledger_balance.ledger_balance_subject_serial
+				and base.ledger_balance_branch = ledger_balance.ledger_balance_branch
+	    )as bb left join ledger_flow as f
+            on datediff(#{date},f.ledger_flow_date) <![CDATA[<=]]> #{diff}
+                and bb.ledger_balance_branch = f.ledger_flow_branch_id
+	            and bb.ledger_balance_subject_serial = f.ledger_flow_subject_serial;
+  </select>
+
+  <insert id="backupOneRecord">
+    insert into ledger_balance_backup (ledger_balance_backup_subject_serial, ledger_balance_backup_balance,
+      ledger_balance_backup_account, ledger_balance_backup_branch,
+      ledger_balance_backup_state, ledger_balance_backup_account_description,ledger_balance_backup_date
+      )
+    values (#{prototype.subjectSerial,jdbcType=VARCHAR}, #{prototype.balance,jdbcType=DECIMAL},
+      #{prototype.account,jdbcType=VARCHAR}, #{prototype.branch,jdbcType=CHAR},
+      #{prototype.state,jdbcType=TINYINT}, #{prototype.accountDescription,jdbcType=VARCHAR},
+      #{date}
+      )
+  </insert>
+
+  <insert id="insertDefaultValue" parameterType="com.dcits.project.pojo.LedgerBalance">
+    insert into ledger_balance (ledger_balance_subject_serial, ledger_balance_balance,
+        ledger_balance_branch, ledger_balance_state
+      )
+    values (#{subjectSerial,jdbcType=VARCHAR}, #{balance,jdbcType=DECIMAL},
+        #{branch,jdbcType=CHAR}, #{state,jdbcType=TINYINT}
+      )
+  </insert>
+
+
+  <!-- *********************** 以下是自动生成部分******************************** -->
+
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from ledger_balance
+    where ledger_balance_subject_serial = #{subjectSerial,jdbcType=VARCHAR}
+      and ledger_balance_branch = #{branch,jdbcType=DECIMAL}
+      <!--and ledger_balance_account = #{account,jdbcType=VARCHAR} -->
+  </delete>
+  <insert id="insert" parameterType="com.dcits.project.pojo.LedgerBalance">
+    insert into ledger_balance (ledger_balance_subject_serial, ledger_balance_balance, 
+      ledger_balance_account, ledger_balance_branch, 
+      ledger_balance_state, ledger_balance_account_description
+      )
+    values (#{subjectSerial,jdbcType=VARCHAR}, #{balance,jdbcType=DECIMAL}, 
+      #{account,jdbcType=VARCHAR}, #{branch,jdbcType=CHAR}, 
+      #{state,jdbcType=TINYINT}, #{accountDescription,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.dcits.project.pojo.LedgerBalance">
+    update ledger_balance
+    set ledger_balance_balance = #{balance,jdbcType=CHAR},
+      ledger_balance_state = #{state,jdbcType=TINYINT},
+      ledger_balance_account_description = #{accountDescription,jdbcType=VARCHAR}
+    where ledger_balance_subject_serial = #{subjectSerial,jdbcType=VARCHAR}
+      and ledger_balance_branch = #{branch,jdbcType=DECIMAL}
+    <!--and ledger_balance_account = #{account,jdbcType=VARCHAR} -->
+  </update>
+  <select id="selectByPrimaryKey" parameterType="map" resultMap="BaseResultMap">
+    select ledger_balance_subject_serial, ledger_balance_balance, ledger_balance_account, 
+    ledger_balance_branch, ledger_balance_state, ledger_balance_account_description
+    from ledger_balance
+    where ledger_balance_subject_serial = #{subjectSerial,jdbcType=VARCHAR}
+      and ledger_balance_branch = #{branch,jdbcType=DECIMAL}
+    <!--and ledger_balance_account = #{account,jdbcType=VARCHAR} -->
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select ledger_balance_subject_serial, ledger_balance_balance, ledger_balance_account, 
+    ledger_balance_branch, ledger_balance_state, ledger_balance_account_description
+    from ledger_balance
+  </select>
+</mapper>

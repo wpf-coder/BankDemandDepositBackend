@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dcits.project.mapper.TellerMapper">
+  <resultMap id="BaseResultMap" type="com.dcits.project.pojo.Teller">
+    <id column="teller_id" jdbcType="CHAR" property="id" />
+    <result column="teller_password" jdbcType="VARCHAR" property="password" />
+    <result column="teller_branch_id" jdbcType="VARCHAR" property="branchId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from teller
+    where teller_id = #{id,jdbcType=CHAR}
+  </delete>
+  <insert id="insert" parameterType="com.dcits.project.pojo.Teller">
+    insert into teller (teller_id, teller_password, teller_branch_id
+      )
+    values (#{id,jdbcType=CHAR}, #{password,jdbcType=VARCHAR}, #{branchId,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.dcits.project.pojo.Teller">
+    update teller
+    set teller_password = #{password,jdbcType=VARCHAR},
+      teller_branch_id = #{branchId,jdbcType=VARCHAR}
+    where teller_id = #{id,jdbcType=CHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select teller_id, teller_password, teller_branch_id
+    from teller
+    where teller_id = #{id,jdbcType=CHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select teller_id, teller_password, teller_branch_id
+    from teller
+  </select>
+</mapper>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dcits.project.mapper.SettlementInterestLogMapper">
+  <resultMap id="BaseResultMap" type="com.dcits.project.pojo.SettlementInterestLog">
+    <id column="settlement_interest_log_serial" jdbcType="INTEGER" property="serial" />
+    <result column="settlement_interest_log_time" jdbcType="DATE" property="time" />
+    <result column="settlement_interest_log_card_id" jdbcType="CHAR" property="cardId" />
+    <result column="settlement_interest_log_interest" jdbcType="DECIMAL" property="interest" />
+    <result column="settlement_interest_log_cumulative_interest" jdbcType="DECIMAL" property="cumulativeInterest" />
+    <result column="settlement_interest_log_last_time" jdbcType="DATE" property="lastTime" />
+  </resultMap>
+
+
+
+
+
+
+  <!-- *****************以下是自动生成 *********************************** -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from settlement_interest_log
+    where settlement_interest_log_serial = #{serial,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.dcits.project.pojo.SettlementInterestLog">
+    insert into settlement_interest_log (settlement_interest_log_serial, settlement_interest_log_time, 
+      settlement_interest_log_card_id, settlement_interest_log_interest, 
+      settlement_interest_log_cumulative_interest, settlement_interest_log_last_time
+      )
+    values (#{serial,jdbcType=INTEGER}, #{time,jdbcType=DATE}, 
+      #{cardId,jdbcType=CHAR}, #{interest,jdbcType=DECIMAL}, 
+      #{cumulativeInterest,jdbcType=DECIMAL}, #{lastTime,jdbcType=DATE}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.dcits.project.pojo.SettlementInterestLog">
+    update settlement_interest_log
+    set settlement_interest_log_time = #{time,jdbcType=DATE},
+      settlement_interest_log_card_id = #{cardId,jdbcType=CHAR},
+      settlement_interest_log_interest = #{interest,jdbcType=DECIMAL},
+      settlement_interest_log_cumulative_interest = #{cumulativeInterest,jdbcType=DECIMAL},
+      settlement_interest_log_last_time = #{lastTime,jdbcType=DATE}
+    where settlement_interest_log_serial = #{serial,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select settlement_interest_log_serial, settlement_interest_log_time, settlement_interest_log_card_id, 
+    settlement_interest_log_interest, settlement_interest_log_cumulative_interest, settlement_interest_log_last_time
+    from settlement_interest_log
+    where settlement_interest_log_serial = #{serial,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select settlement_interest_log_serial, settlement_interest_log_time, settlement_interest_log_card_id, 
+    settlement_interest_log_interest, settlement_interest_log_cumulative_interest, settlement_interest_log_last_time
+    from settlement_interest_log
+  </select>
+</mapper>

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dcits.project.mapper.LedgerRecordMapper">
+  <resultMap id="BaseResultMap" type="com.dcits.project.pojo.LedgerRecord">
+    <id column="ledger_record_serial" jdbcType="INTEGER" property="serial" />
+    <result column="ledger_record_branch_id" jdbcType="CHAR" property="branchId" />
+    <result column="ledge_record_subject_serial" jdbcType="VARCHAR" property="subjectSerial" />
+    <result column="ledger_record_account_time" jdbcType="DATE" property="accountTime" />
+    <result column="ledger_record_begin_debtor" jdbcType="DECIMAL" property="beginDebtor" />
+    <result column="ledger_record_begin_credit" jdbcType="DECIMAL" property="beginCredit" />
+    <result column="ledger_record_interim_credit" jdbcType="DECIMAL" property="interimCredit" />
+    <result column="ledger_record_interim_debit" jdbcType="DECIMAL" property="interimDebit" />
+    <result column="ledger_record_end_debtor" jdbcType="DECIMAL" property="endDebtor" />
+    <result column="ledger_record_end_credit" jdbcType="DECIMAL" property="endCredit" />
+  </resultMap>
+
+  <resultMap id="linkToFlows" type="com.dcits.project.pojo.LedgerRecord" extends="BaseResultMap">
+    <collection property="flows" resultMap="com.dcits.project.mapper.TransactionFlowMapper.BaseResultMap"/>
+  </resultMap>
+
+  <insert id="insert" parameterType="com.dcits.project.pojo.LedgerRecord">
+    insert into ledger_record (ledger_record_serial, ledger_record_branch_id,
+      ledge_record_subject_serial, ledger_record_account_time,
+      ledger_record_begin_debtor, ledger_record_begin_credit,
+       ledger_record_interim_credit,ledger_record_interim_debit,
+      ledger_record_end_debtor, ledger_record_end_credit
+      )
+    values (#{serial,jdbcType=INTEGER}, #{branchId,jdbcType=CHAR},
+      #{subjectSerial,jdbcType=VARCHAR}, #{accountTime,jdbcType=DATE},
+      #{beginDebtor,jdbcType=DECIMAL}, #{beginCredit,jdbcType=DECIMAL},
+      #{interimCredit,jdbcType=DECIMAL}, #{interimDebit,jdbcType=DECIMAL},
+      #{endDebtor,jdbcType=DECIMAL}, #{endCredit,jdbcType=DECIMAL}
+      )
+  </insert>
+
+  <select id="ledgerCorrespondingFlow" resultMap="linkToFlows">
+    select *
+    from (
+        select ledger_record_serial, ledger_record_branch_id, ledger_record_end_debtor, ledger_record_end_credit,ledge_record_subject_serial
+        from ledger_record
+        where datediff(ledger_record_account_time,#{yesterday}) = 0 and ledge_record_subject_serial = #{subject}
+        ) as l  left join (
+                            select transaction_flow_branch_id,transaction_flow_type, transaction_flow_amount
+                            from transaction_flow
+                            where transaction_flow_type <![CDATA[&]]> #{type} = transaction_flow_type
+                                  and DATEDIFF(transaction_flow_time,#{today})=0
+                            ) as t on l.ledger_record_branch_id = t.transaction_flow_branch_id;
+  </select>
+  
+
+  <select id="queryCashLedger" resultMap="BaseResultMap">
+    select ledger_record_serial, ledger_record_branch_id, ledge_record_subject_serial, ledger_record_account_time,
+    ledger_record_begin_debtor, ledger_record_begin_credit,ledger_record_interim_debit,
+    ledger_record_interim_credit, ledger_record_end_debtor, ledger_record_end_credit
+    from ledger_record
+    <where>
+      <if test='type != null and type != "0"' >
+        ledge_record_subject_serial = #{type}
+      </if>
+      <if test="endTime != null" >
+        and  ledger_record_account_time &lt; #{endTime}
+
+      </if>
+      <if test="startTime != null">
+        and ledger_record_account_time &gt;= #{startTime}
+      </if>
+      <!--   ledger_record_branch_id = #{branchId} -->
+      <!-- 暂时不支持网点查询  -->
+    </where>
+
+
+  </select>
+    <!-- *****************以下是自动生成 *********************************** -->
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from ledger_record
+    where ledger_record_serial = #{serial,jdbcType=INTEGER}
+  </delete>
+
+  <update id="updateByPrimaryKey" parameterType="com.dcits.project.pojo.LedgerRecord">
+    update ledger_record
+    set ledger_record_branch_id = #{branchId,jdbcType=CHAR},
+        ledge_record_subject_serial = #{subjectSerial,jdbcType=VARCHAR},
+      ledger_record_account_time = #{accountTime,jdbcType=DATE},
+      ledger_record_begin_debtor = #{beginDebtor,jdbcType=DECIMAL},
+      ledger_record_begin_credit = #{beginCredit,jdbcType=DECIMAL},
+        ledger_record_interim_debit = #{interimDebit,jdbcType=DECIMAL},
+      ledger_record_interim_credit = #{interimCredit,jdbcType=DECIMAL},
+      ledger_record_end_debtor = #{endDebtor,jdbcType=DECIMAL},
+      ledger_record_end_credit = #{endCredit,jdbcType=DECIMAL}
+    where ledger_record_serial = #{serial,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select ledger_record_serial, ledger_record_branch_id, ledge_record_subject_serial, ledger_record_account_time,
+    ledger_record_begin_debtor, ledger_record_begin_credit,ledger_record_interim_debit,
+    ledger_record_interim_credit, ledger_record_end_debtor, ledger_record_end_credit
+    from ledger_record
+    where ledger_record_serial = #{serial,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select ledger_record_serial, ledger_record_branch_id, ledge_record_subject_serial, ledger_record_account_time,
+    ledger_record_begin_debtor, ledger_record_begin_credit,ledger_record_interim_debit,
+    ledger_record_interim_credit, ledger_record_end_debtor, ledger_record_end_credit
+    from ledger_record
+  </select>
+
+
+</mapper>

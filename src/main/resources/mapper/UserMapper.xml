@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dcits.project.mapper.UserMapper">
+  <resultMap id="BaseResultMap" type="com.dcits.project.pojo.User">
+    <id column="user_id" jdbcType="CHAR" property="id" />
+    <result column="user_name" jdbcType="VARCHAR" property="name" />
+    <result column="user_phone" jdbcType="CHAR" property="phone" />
+    <result column="user_address" jdbcType="VARCHAR" property="address" />
+    <result column="user_email" jdbcType="VARCHAR" property="email" />
+    <result column="user_ebank_state" jdbcType="TINYINT" property="ebankState" />
+    <result column="user_mobile_bank_state" jdbcType="TINYINT" property="mobileBankState" />
+    <result column="user_foreign_exchange_state" jdbcType="TINYINT" property="foreignExchangeState" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from user
+    where user_id = #{id,jdbcType=CHAR}
+  </delete>
+  <insert id="insert" parameterType="com.dcits.project.pojo.User">
+    insert into user (user_id, user_name, user_phone, 
+      user_address, user_email, user_ebank_state, 
+      user_mobile_bank_state, user_foreign_exchange_state
+      )
+    values (#{id,jdbcType=CHAR}, #{name,jdbcType=VARCHAR}, #{phone,jdbcType=CHAR}, 
+      #{address,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{ebankState,jdbcType=TINYINT}, 
+      #{mobileBankState,jdbcType=TINYINT}, #{foreignExchangeState,jdbcType=TINYINT}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.dcits.project.pojo.User">
+    update user
+    set
+
+      user_name = #{name,jdbcType=VARCHAR},
+      user_phone = #{phone,jdbcType=CHAR},
+      user_address = #{address,jdbcType=VARCHAR},
+      user_email = #{email,jdbcType=VARCHAR},
+      user_ebank_state = #{ebankState,jdbcType=TINYINT},
+      user_mobile_bank_state = #{mobileBankState,jdbcType=TINYINT},
+      user_foreign_exchange_state = #{foreignExchangeState,jdbcType=TINYINT}
+    where user_id = #{id,jdbcType=CHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select user_id, user_name, user_phone, user_address, user_email, user_ebank_state, 
+    user_mobile_bank_state, user_foreign_exchange_state
+    from user
+    where user_id = #{id,jdbcType=CHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select user_id, user_name, user_phone, user_address, user_email, user_ebank_state, 
+    user_mobile_bank_state, user_foreign_exchange_state
+    from user
+  </select>
+
+  <select id="selectByPhone" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select user_id, user_name, user_phone, user_address, user_email, user_ebank_state,
+           user_mobile_bank_state, user_foreign_exchange_state
+    from user
+    where user_phone=#{phone,jdbcType=CHAR}
+  </select>
+
+  <select id="selectByFeature" parameterType="com.dcits.project.pojo.User" resultMap="BaseResultMap">
+        select user_id, user_name, user_phone, user_address, user_email, user_ebank_state, user_mobile_bank_state, user_foreign_exchange_state
+        from user
+        <where>
+            <if test='user.id != null'>
+                user_id = #{user.id}
+            </if>
+            <if test='user.phone!=null'>
+                and  user_phone = #{user.phone}
+            </if>
+            <if test="user.name!=null">
+              and user_name = #{user.name}
+            </if>
+        </where>
+  </select>
+</mapper>

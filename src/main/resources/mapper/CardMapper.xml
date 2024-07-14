@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dcits.project.mapper.CardMapper">
+  <resultMap id="BaseResultMap" type="com.dcits.project.pojo.Card">
+    <id column="card_id" jdbcType="CHAR" property="id" />
+    <result column="card_user_id" jdbcType="CHAR" property="userId" />
+    <result column="card_password" jdbcType="VARCHAR" property="password" />
+    <result column="card_balance" jdbcType="DECIMAL" property="balance" />
+    <result column="card_state" jdbcType="TINYINT" property="state" />
+    <result column="card_last_time" jdbcType="TIMESTAMP" property="lastTime" />
+  </resultMap>
+
+    <resultMap id="linkToDemandInterest" type="com.dcits.project.pojo.Card" extends="BaseResultMap">
+        <association property="demandInterest" resultMap="com.dcits.project.mapper.DemandInterestMapper.BaseResultMap"/>
+    </resultMap>
+
+    <select id="selectAllCardLinkDemandInterest" resultMap="linkToDemandInterest">
+        select card_id, card_balance, card_state,demand_interest_card_id, demand_interest_cumulative_interest,
+                demand_interest_last_count_time, demand_interest_last_settle_time
+        from card left join demand_interest di on card.card_id = di.demand_interest_card_id
+    </select>
+
+  <select id="selectByUserInformation" resultMap="BaseResultMap">
+        select card_id, card_user_id, card_password, card_balance, card_state, card_last_time
+        from card right join
+               (select user_id
+                from    user
+                <where>
+                   <if test='user.id != null and user.id != "" '>
+                        user.user_id = #{user.id}
+                   </if>
+                   <if test='user.phone != null and user.phone != ""'>
+                       and user.user_phone = #{user.phone}
+                   </if>
+                </where>
+               )as u  on card.card_user_id = u.user_id;
+  </select>
+
+
+  <update id="updateByPrimaryKey" parameterType="com.dcits.project.pojo.Card">
+    update card
+    <set>
+      <if test='password != null and password !="" '>
+        card_password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="balance != null">
+        card_balance = #{balance,jdbcType=DECIMAL},
+      </if>
+      <if test="state != null">
+        card_state = #{state,jdbcType=TINYINT},
+      </if>
+    </set>
+    where card_id = #{id,jdbcType=CHAR}
+  </update>
+
+  <!--                            自动生成代码                          -->
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from card
+    where card_id = #{id,jdbcType=CHAR}
+  </delete>
+
+  <insert id="insert" parameterType="com.dcits.project.pojo.Card">
+    insert into card (card_id, card_user_id, card_password, 
+      card_balance, card_state, card_last_time
+      )
+    values (#{id,jdbcType=CHAR}, #{userId,jdbcType=CHAR}, #{password,jdbcType=VARCHAR}, 
+      #{balance,jdbcType=DECIMAL}, #{state,jdbcType=TINYINT}, #{lastTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+
+
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select card_id, card_user_id, card_password, card_balance, card_state, card_last_time
+    from card
+    where card_id = #{id,jdbcType=CHAR}
+  </select>
+
+
+    <select id="selectByFeature" parameterType="com.dcits.project.pojo.Card" resultMap="BaseResultMap">
+        select card_id, card_user_id, card_password, card_balance, card_state, card_last_time
+        from card
+        <where>
+            <if test='id != null and id != ""'>
+                card_id = #{id,jdbcType=CHAR}
+            </if>
+            <if test='userId != null and userId != ""'>
+                and  card_user_id = #{userId}
+            </if>
+        </where>
+    </select>
+
+  <select id="selectAll" resultMap="BaseResultMap">
+    select card_id, card_user_id, card_password, card_balance, card_state, card_last_time
+    from card
+  </select>
+</mapper>

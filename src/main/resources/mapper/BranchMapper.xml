@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dcits.project.mapper.BranchMapper">
+  <resultMap id="BaseResultMap" type="com.dcits.project.pojo.Branch">
+    <id column="branch_id" jdbcType="CHAR" property="id" />
+    <result column="branch_name" jdbcType="VARCHAR" property="name" />
+    <result column="branch_address" jdbcType="VARCHAR" property="address" />
+    <result column="branch_phone" jdbcType="CHAR" property="phone" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from branch
+    where branch_id = #{id,jdbcType=CHAR}
+  </delete>
+  <insert id="insert" parameterType="com.dcits.project.pojo.Branch">
+    insert into branch (branch_id, branch_name, branch_address, 
+      branch_phone)
+    values (#{id,jdbcType=CHAR}, #{name,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
+      #{phone,jdbcType=CHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.dcits.project.pojo.Branch">
+    update branch
+    set branch_name = #{name,jdbcType=VARCHAR},
+      branch_address = #{address,jdbcType=VARCHAR},
+      branch_phone = #{phone,jdbcType=CHAR}
+    where branch_id = #{id,jdbcType=CHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select branch_id, branch_name, branch_address, branch_phone
+    from branch
+    where branch_id = #{id,jdbcType=CHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select branch_id, branch_name, branch_address, branch_phone
+    from branch
+  </select>
+</mapper>
